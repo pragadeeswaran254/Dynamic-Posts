@@ -6,9 +6,10 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Middleware to parse URL-encoded bodies (form submissions)
 app.use(express.urlencoded({ extended: true }));
 
-// MongoDB connection (already set up in your previous steps)
+// MongoDB connection
 const mongoURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/your-local-db';
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
@@ -22,7 +23,7 @@ app.get('/', (req, res) => {
   res.send('Hello, MongoDB Atlas is connected!');
 });
 
-// Route to display all posts
+// Display all posts
 app.get('/posts', async (req, res) => {
   const posts = await Post.find().sort({ createdAt: -1 });
   let html = '<h1>All Posts</h1>';
@@ -34,7 +35,7 @@ app.get('/posts', async (req, res) => {
   res.send(html);
 });
 
-// Route to display the form for creating a post
+// Show form to create a new post
 app.get('/new', (req, res) => {
   res.send(`
     <h1>Create a New Post</h1>
@@ -47,7 +48,7 @@ app.get('/new', (req, res) => {
   `);
 });
 
-// Route to handle post creation
+// Handle form submission to create a new post
 app.post('/posts', async (req, res) => {
   const { title, content } = req.body;
   await Post.create({ title, content });
