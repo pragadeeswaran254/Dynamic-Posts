@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dynamic Posts</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Dynamic Posts</h1>
+        <% if (editPost) { %>
+            <!-- Edit form -->
+            <form action="/edit/<%= editPost._id %>" method="POST">
+                <input type="text" name="title" value="<%= editPost.title %>" required>
+                <textarea name="content" required><%= editPost.content %></textarea>
+                <button type="submit">Save Changes</button>
+                <a href="/" style="margin-left:10px;">Cancel</a>
+            </form>
+        <% } else { %>
+            <!-- Add form -->
+            <form action="/add" method="POST">
+                <input type="text" name="title" placeholder="Title" required>
+                <textarea name="content" placeholder="Content" required></textarea>
+                <button type="submit">Add Post</button>
+            </form>
+        <% } %>
+
+        <% if (error) { %>
+            <div style="color: red; margin-bottom: 12px;"><%= error %></div>
+        <% } %>
+
+        <hr>
+        <h2>All Posts:</h2>
+        <ul>
+            <% posts.forEach(function(post) { %>
+                <li>
+                    <span class="post-title"><%= post.title %></span>
+                    <span class="post-date">(<%= post.date.toLocaleString() %>)</span>
+                    <div class="post-content"><%= post.content %></div>
+                    <form action="/delete/<%= post._id %>" method="POST" style="display:inline;">
+                        <button type="submit" class="del-btn" onclick="return confirm('Delete this post?');">Delete</button>
+                    </form>
+                    <form action="/edit/<%= post._id %>" method="GET" style="display:inline;">
+                        <button type="submit" class="edit-btn">Edit</button>
+                    </form>
+                </li>
+            <% }); %>
+        </ul>
+    </div>
+</body>
+</html>
